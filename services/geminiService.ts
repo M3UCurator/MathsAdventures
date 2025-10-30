@@ -1,10 +1,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { WordProblem, QuizQuestion } from '../types';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
-    throw new Error("API_KEY is not set in environment variables");
+    throw new Error("GEMINI_API_KEY is not set in environment variables");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
