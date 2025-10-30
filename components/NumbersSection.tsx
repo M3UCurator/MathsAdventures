@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import BackButton from './BackButton';
 import Quiz from './Quiz';
-import { WordProblem } from '../types';
+import { WordProblem, Profile } from '../types';
 import { generateWordProblem } from '../services/geminiService';
 
 interface SectionProps {
     onBack: () => void;
+    profile: Profile;
 }
 
-const NumbersSection: React.FC<SectionProps> = ({ onBack }) => {
+const NumbersSection: React.FC<SectionProps> = ({ onBack, profile }) => {
     const topicTitle = 'Numbers, Operations & Relationships';
     const [wordProblem, setWordProblem] = useState<WordProblem | null>(null);
     const [userAnswer, setUserAnswer] = useState('');
@@ -20,7 +21,7 @@ const NumbersSection: React.FC<SectionProps> = ({ onBack }) => {
         setIsLoading(true);
         setFeedback('');
         setUserAnswer('');
-        const problem = await generateWordProblem();
+        const problem = await generateWordProblem(profile.grade);
         setWordProblem(problem);
         setIsLoading(false);
     };
@@ -36,7 +37,7 @@ const NumbersSection: React.FC<SectionProps> = ({ onBack }) => {
     };
 
     if (activeQuizSet) {
-        return <Quiz key={activeQuizSet} topicTitle={topicTitle} quizSet={activeQuizSet} onBack={() => setActiveQuizSet(null)} />;
+        return <Quiz key={activeQuizSet} topicTitle={topicTitle} quizSet={activeQuizSet} onBack={() => setActiveQuizSet(null)} grade={profile.grade} />;
     }
 
     return (

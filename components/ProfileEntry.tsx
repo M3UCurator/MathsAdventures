@@ -45,6 +45,7 @@ const ProfileEntry: React.FC<ProfileEntryProps> = ({ onSubmit }) => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
                     >
                         <option value={2}>Grade 2</option>
+                        <option value={3}>Grade 3</option>
                         {/* Can add more grades later */}
                     </select>
                 </div>

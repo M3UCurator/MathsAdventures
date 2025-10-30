@@ -38,11 +38,11 @@ const App: React.FC = () => {
                 <Header profile={profile} />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-8">
                     {!selectedTopic && <Dashboard onTopicSelect={handleTopicSelect} />}
-                    {selectedTopic === Topic.Numbers && <NumbersSection onBack={handleBackToDashboard} />}
-                    {selectedTopic === Topic.Patterns && <PatternsSection onBack={handleBackToDashboard} />}
-                    {selectedTopic === Topic.Geometry && <GeometrySection onBack={handleBackToDashboard} />}
-                    {selectedTopic === Topic.Measurement && <MeasurementSection onBack={handleBackToDashboard} />}
-                    {selectedTopic === Topic.DataHandling && <DataHandlingSection onBack={handleBackToDashboard} />}
+                    {selectedTopic === Topic.Numbers && <NumbersSection onBack={handleBackToDashboard} profile={profile} />}
+                    {selectedTopic === Topic.Patterns && <PatternsSection onBack={handleBackToDashboard} profile={profile} />}
+                    {selectedTopic === Topic.Geometry && <GeometrySection onBack={handleBackToDashboard} profile={profile} />}
+                    {selectedTopic === Topic.Measurement && <MeasurementSection onBack={handleBackToDashboard} profile={profile} />}
+                    {selectedTopic === Topic.DataHandling && <DataHandlingSection onBack={handleBackToDashboard} profile={profile} />}
                 </main>
             </div>
         </div>

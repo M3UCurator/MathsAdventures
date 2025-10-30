@@ -7,9 +7,10 @@ interface QuizProps {
     topicTitle: string;
     quizSet: number;
     onBack: () => void;
+    grade: number;
 }
 
-const Quiz: React.FC<QuizProps> = ({ topicTitle, quizSet, onBack }) => {
+const Quiz: React.FC<QuizProps> = ({ topicTitle, quizSet, onBack, grade }) => {
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswer, setUserAnswer] = useState('');
@@ -22,7 +23,7 @@ const Quiz: React.FC<QuizProps> = ({ topicTitle, quizSet, onBack }) => {
         try {
             setIsLoading(true);
             setError(null);
-            const fetchedQuestions = await generateQuizQuestions(topicTitle, quizSet);
+            const fetchedQuestions = await generateQuizQuestions(topicTitle, quizSet, grade);
             setQuestions(fetchedQuestions);
         } catch (err) {
             if (err instanceof Error) {
@@ -37,7 +38,7 @@ const Quiz: React.FC<QuizProps> = ({ topicTitle, quizSet, onBack }) => {
     
     useEffect(() => {
         fetchQuestions();
-    }, [topicTitle, quizSet]);
+    }, [topicTitle, quizSet, grade]);
 
     const handleAnswerSelect = (answer: string) => {
         setUserAnswer(answer);

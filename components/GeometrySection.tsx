@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import BackButton from './BackButton';
 import Quiz from './Quiz';
-import { Topic } from '../types';
+import { Topic, Profile } from '../types';
 
 interface SectionProps {
     onBack: () => void;
+    profile: Profile;
 }
 
-const GeometrySection: React.FC<SectionProps> = ({ onBack }) => {
+const GeometrySection: React.FC<SectionProps> = ({ onBack, profile }) => {
     const topicTitle = Topic.Geometry;
     const [activeQuizSet, setActiveQuizSet] = useState<number | null>(null);
 
     if (activeQuizSet) {
-        return <Quiz key={activeQuizSet} topicTitle={topicTitle} quizSet={activeQuizSet} onBack={() => setActiveQuizSet(null)} />;
+        return <Quiz key={activeQuizSet} topicTitle={topicTitle} quizSet={activeQuizSet} onBack={() => setActiveQuizSet(null)} grade={profile.grade} />;
     }
 
     return (

@@ -1,19 +1,23 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { WordProblem, QuizQuestion } from '../types';
+import { WordProblem, QuizQuestion, Topic } from '../types';
 
-const API_KEY = process.env.GEMINI_API_KEY;
+const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
-    throw new Error("GEMINI_API_KEY is not set in environment variables");
+    throw new Error("API_KEY is not set in environment variables");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
-export async function generateWordProblem(): Promise<WordProblem> {
+export async function generateWordProblem(grade: number): Promise<WordProblem> {
+    const gradeSpecificPrompt = grade === 3
+        ? `Generate a math word problem for a Grade 3 student in South Africa. The problem can involve addition/subtraction with 3-4 digit numbers, or simple multiplication/division. The context should be relatable to a South African child (e.g., mention local animals, places, or currency like Rand). The problem must be solvable with a single numerical answer.`
+        : `Generate a simple, one-step math word problem for a Grade 2 student in South Africa. The problem should involve addition or subtraction with numbers where the sum is up to 100 and subtraction results are positive. The context should be relatable to a South African child (e.g., mention local animals like springboks, places, or currency like Rand). The problem must be solvable with a single numerical answer.`;
+    
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: `Generate a simple, one-step math word problem for a Grade 2 student in South Africa. The problem should involve addition or subtraction with numbers where the sum is up to 100 and subtraction results are positive. The context should be relatable to a South African child (e.g., mention local animals like springboks, places, or currency like Rand). The problem must be solvable with a single numerical answer.`,
+            contents: gradeSpecificPrompt,
             config: {
                 responseMimeType: "application/json",
                 responseSchema: {
@@ -53,14 +57,52 @@ export async function generateWordProblem(): Promise<WordProblem> {
     }
 }
 
-export async function generateQuizQuestions(topicTitle: string, quizSet: number): Promise<QuizQuestion[]> {
+const grade3Curriculum = {
+  [Topic.Numbers]: `
+- **Number Sense and Place Value:** Count, read, write numbers up to 10,000; understand place value (thousands, hundreds, tens, ones); compare, order, and round numbers to the nearest 10, 100, and 1,000.
+- **Operations and Problem Solving:** Master addition and subtraction with 3–4 digit numbers; use multiplication tables (1–10); understand division as sharing and grouping; solve word problems using all operations.
+- **Fractions:** Understand and represent ½, ¼, ⅓, ⅕, ⅙, ⅛; identify fractions of shapes and sets; compare and order simple fractions.
+- **Problem Solving & Reasoning:** Integrate multiple concepts into applied tasks.`,
+  [Topic.Patterns]: `
+- **Patterns, Functions, and Algebra:** Recognize, describe, and extend numeric and geometric patterns; identify rules for patterns (add, subtract, multiply); build input–output tables.`,
+  [Topic.Geometry]: `
+- **Space and Shape (Geometry):** Identify, name, and describe 2D shapes and 3D objects; explore properties (sides, faces, corners, edges); recognize symmetry; understand position, direction, and movement.`,
+  [Topic.Measurement]: `
+- **Measurement:** Measure length (mm, cm, m), mass (g, kg), and capacity (mℓ, ℓ); read analogue/digital clocks (hour, half-hour, quarter-hour); add and subtract Rand and cents, make change; estimate and compare measurements.`,
+  [Topic.DataHandling]: `
+- **Data Handling:** Collect, record, and organize data; represent data using tally charts, bar graphs, and pictographs; interpret and compare graphs.`
+};
+
+
+export async function generateQuizQuestions(topicTitle: string, quizSet: number, grade: number): Promise<QuizQuestion[]> {
+    let prompt;
+
+    if (grade === 3) {
+        const curriculumDetails = grade3Curriculum[topicTitle as Topic] || `the specified topic: ${topicTitle}`;
+        let specialInstructions = '';
+        if (topicTitle === Topic.Numbers) {
+            specialInstructions = `For this complex topic, please focus Quiz Set ${quizSet} on one or two of the curriculum areas (e.g., Place Value for Quiz 1, Operations for Quiz 2, Fractions for Quiz 3) to ensure variety across the 3 quiz sets.`;
+        }
+        prompt = `Generate a quiz with exactly 10 questions for a Grade 3 student in South Africa, based on the topic: "${topicTitle}".
+This is question set number ${quizSet} out of 3. Ensure the questions are unique from other sets and are based on the following Grade 3 curriculum points:
+${curriculumDetails}
+${specialInstructions}
+The questions should be a mix of multiple-choice and single-number-answer 'input' questions.
+For each question, provide a 'type' field ('multiple-choice' or 'input').
+- For 'multiple-choice', provide 4 'options' and a 'correctAnswer' that matches one of the options.
+- For 'input', provide a 'correctAnswer' which is a number formatted as a string. Do not include 'options'.`;
+
+    } else { // grade === 2 (or default)
+        prompt = `Generate a quiz with exactly 10 questions for a Grade 2 student in South Africa, based on the topic: "${topicTitle}". This is question set number ${quizSet} out of 3. Ensure the questions are unique from other sets. The questions should be a mix of multiple-choice and single-number-answer 'input' questions.
+For each question, provide a 'type' field ('multiple-choice' or 'input').
+- For 'multiple-choice', provide 4 'options' and a 'correctAnswer' that matches one of the options.
+- For 'input', provide a 'correctAnswer' which is a number formatted as a string. Do not include 'options'.`;
+    }
+    
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: `Generate a quiz with exactly 10 questions for a Grade 2 student in South Africa, based on the topic: "${topicTitle}". This is question set number ${quizSet} out of 3. Ensure the questions are unique from other sets. The questions should be a mix of multiple-choice and single-number-answer 'input' questions.
-            For each question, provide a 'type' field ('multiple-choice' or 'input').
-            - For 'multiple-choice', provide 4 'options' and a 'correctAnswer' that matches one of the options.
-            - For 'input', provide a 'correctAnswer' which is a number formatted as a string. Do not include 'options'.`,
+            contents: prompt,
             config: {
                 responseMimeType: "application/json",
                 responseSchema: {
