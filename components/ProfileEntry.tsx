@@ -17,10 +17,10 @@ const ProfileEntry: React.FC<ProfileEntryProps> = ({ onSubmit }) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-300 to-purple-400">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-300 to-purple-400 p-4">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md text-center"
+                className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl w-full max-w-md text-center"
             >
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome, Future Math Whiz!</h1>
                 <p className="text-gray-600 mb-8">Let's get to know you.</p>

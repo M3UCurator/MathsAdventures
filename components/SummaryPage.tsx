@@ -28,16 +28,16 @@ const SummaryPage: React.FC<SummaryPageProps> = ({ score, total, onRestart, onBa
                 </p>
                 <p className="text-2xl font-semibold text-green-600">{percentage}%</p>
             </div>
-            <div className="flex justify-center space-x-4 mt-8">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
                 <button
                     onClick={onRestart}
-                    className="px-6 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
+                    className="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
                 >
                     Try Again
                 </button>
                 <button
                     onClick={onBack}
-                    className="px-6 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-transform transform hover:scale-105"
+                    className="w-full sm:w-auto px-6 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-transform transform hover:scale-105"
                 >
                     Back to Topic
                 </button>

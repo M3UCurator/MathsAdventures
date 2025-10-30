@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import BackButton from './BackButton';
 import Quiz from './Quiz';
@@ -56,12 +57,12 @@ const NumbersSection: React.FC<SectionProps> = ({ onBack, profile }) => {
                         {wordProblem && (
                             <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
                                 <p className="text-lg text-gray-800 mb-4">{wordProblem.problem}</p>
-                                <div className="flex items-center space-x-4">
+                                <div className="flex flex-col md:flex-row items-stretch md:items-center space-y-3 md:space-y-0 md:space-x-4">
                                     <input
                                         type="number"
                                         value={userAnswer}
                                         onChange={(e) => setUserAnswer(e.target.value)}
-                                        className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                        className="w-full md:w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Your answer"
                                     />
                                     <button onClick={checkAnswer} className="px-5 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">

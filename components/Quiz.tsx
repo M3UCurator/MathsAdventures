@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '../types';
 import { generateQuizQuestions } from '../services/geminiService';
@@ -116,7 +117,7 @@ const Quiz: React.FC<QuizProps> = ({ topicTitle, quizSet, onBack, grade }) => {
     const currentQuestion = questions[currentQuestionIndex];
 
     return (
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-3xl mx-auto">
+        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg w-full max-w-3xl mx-auto">
             <div className="mb-6">
                 <p className="text-sm font-semibold text-blue-600">Question {currentQuestionIndex + 1} of {questions.length}</p>
                 <h2 className="text-2xl font-bold text-gray-800 mt-2">{currentQuestion.question}</h2>
